@@ -3,6 +3,9 @@ const app = express();
 const http = require("http");
 const server = http.createServer(app);
 
+// Sử dụng .env
+require("dotenv").config();
+
 // nhúng file route
 const routeClient = require("./routes/client/index.route");
 
@@ -14,6 +17,6 @@ app.use(express.static(`${__dirname}/public`)); // Thiết lập thư mục ch�
 // truyền app qua bên route
 routeClient.index(app)
 
-server.listen(3000, () => {
+server.listen(process.env.PORT, () => {
   console.log("Server is running on port 3000");
 });
