@@ -6,6 +6,10 @@ const server = http.createServer(app);
 // Sử dụng .env
 require("dotenv").config();
 
+// Kết nối database
+const database = require('./config/database');
+database.connect();
+
 // nhúng file route
 const routeClient = require("./routes/client/index.route");
 
