@@ -3,6 +3,8 @@ const router = express.Router();
 
 const controller = require('../../controllers/client/chat.controller')
 
-router.get("/", controller.index)
+const userMiddleware = require("../../middlewares/client/user.middleware")
+
+router.get("/", userMiddleware.requireAuth, controller.index)
 
 module.exports = router
