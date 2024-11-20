@@ -1,5 +1,5 @@
-const homeRoute = require("./home.route")
+const chatRoute = require("./chat.route")
 
 module.exports.index = (app) => {
-  app.use("/", homeRoute)
+  app.use("/", chatRoute)
 }
