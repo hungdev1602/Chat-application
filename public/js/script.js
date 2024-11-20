@@ -6,3 +6,6 @@ if(alertMessage){
   }, 3000)
 }
 // Hết Tắt thông báo alert message sau 3s
+
+// Socket.io
+var socket = io();

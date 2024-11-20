@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
+
 // Sử dụng .env
 require("dotenv").config();
 const flash = require('express-flash');
@@ -36,6 +39,10 @@ app.use(express.static(`${__dirname}/public`)); // Thiết lập thư mục ch�
 
 // truyền app qua bên route
 routeClient.index(app)
+
+io.on("connection", (socket) => {
+  console.log("Có 1 user kết nối!", socket.id);
+});
 
 server.listen(process.env.PORT, () => {
   console.log("Server is running on port 3000");
