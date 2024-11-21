@@ -15,6 +15,13 @@ module.exports.index = async (req, res) => {
       // lưu tin nhắn vào database
       const newChat = new Chat(dataChatForSave)
       await newChat.save();
+
+      // Trả tin nhắn đó về cho tất cả các máy 
+      _io.emit("SERVER_RETURN_MESSAGE", {
+        userId: res.locals.user.id,
+        fullName: res.locals.user.fullName,
+        content: data.message
+      })
     })
   });
 

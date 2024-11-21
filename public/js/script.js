@@ -25,4 +25,9 @@ if(formChat){
   });
 }
 
+// Nhận tin nhắn từ server trả về
+socket.on("SERVER_RETURN_MESSAGE", (data) => {
+  console.log(data)
+})
+
 // End Socket.io
