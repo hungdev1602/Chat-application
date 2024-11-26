@@ -20,7 +20,7 @@ module.exports.index = async (req, res) => {
       _io.emit("SERVER_RETURN_MESSAGE", {
         userId: res.locals.user.id,
         fullName: res.locals.user.fullName,
-        content: data.message
+        content: data.message,
       })
     })
   });

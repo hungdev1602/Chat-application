@@ -8,7 +8,7 @@ block main
 
     .row
       .col-12
-        .chat
+        .chat(my-id=user.id)
           .inner-body
             each chat in chats
               if(user.id != chat.userId)
