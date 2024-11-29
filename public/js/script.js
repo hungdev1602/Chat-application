@@ -1,3 +1,5 @@
+import * as Popper from 'https://cdn.jsdelivr.net/npm/@popperjs/core@^2/dist/esm/index.js'
+
 // Tắt thông báo alert message sau 3s
 const alertMessage = document.querySelector("[alert-message]")
 if(alertMessage){
@@ -56,5 +58,34 @@ if(bodyChat) {
   bodyChat.scrollTop = bodyChat.scrollHeight;
 }
 // End Scroll Chat To Bottom
+
+// Show Emoji
+const emojiPicker = document.querySelector("emoji-picker");
+if(emojiPicker){
+  emojiPicker.addEventListener('emoji-click', event => {
+    const inputChat = document.querySelector('.chat .inner-form input[name="content"]');
+    inputChat.value = inputChat.value + event.detail.unicode
+  });
+}
+// End Show Emoji
+
+// Toolip
+const buttonIcon = document.querySelector(".chat .inner-form .button-icon");
+const tooltip = document.querySelector('.tooltip')
+if(buttonIcon){
+  Popper.createPopper(buttonIcon, tooltip)
+
+  buttonIcon.addEventListener("click", () => {
+    tooltip.classList.toggle('shown')
+  })
+  // close tooltip outside tooltip
+  window.addEventListener('click', function(e){   
+    if (!(tooltip.contains(e.target)) && !buttonIcon.contains(e.target)){
+      tooltip.classList.remove('shown')
+    } 
+  });
+}
+
+// End Toolip
 
 // End Socket.io
