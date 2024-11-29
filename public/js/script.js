@@ -24,6 +24,8 @@ if(formChat){
     }
     socket.emit("CLIENT_SEND_MESSAGE", data)
     formChat.content.value = ""
+    // gửi tin nhắn xong và xoá typing
+    socket.emit("CLIENT_SEND_TYPING", false)
   });
 }
 
@@ -37,7 +39,9 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
   if(data.userId === userId){
     div.classList.add("inner-outgoing")
     div.innerHTML = `<div class="inner-content">${data.content}</div>`
-    inner_body.appendChild(div)
+    // inner_body.appendChild(div)
+    const listTyping = document.querySelector(".chat .inner-list-typing");
+    inner_body.insertBefore(div, listTyping) // insert trước block list-typing
   }
   else{
     div.classList.add("inner-incoming")
@@ -46,7 +50,9 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
       <div class="inner-content">${data.content}</div>
     `
     div.innerHTML = fullName
-    inner_body.appendChild(div)
+    // inner_body.appendChild(div)
+    const listTyping = document.querySelector(".chat .inner-list-typing");
+    inner_body.insertBefore(div, listTyping) // insert trước block list-typing
   }
 
   inner_body.scrollTop = inner_body.scrollHeight;
@@ -80,6 +86,7 @@ if(buttonIcon){
   })
   // close tooltip outside tooltip
   window.addEventListener('click', function(e){   
+    // không ấn vào tooltip(vào icon) với buttonIcon
     if (!(tooltip.contains(e.target)) && !buttonIcon.contains(e.target)){
       tooltip.classList.remove('shown')
     } 
@@ -87,5 +94,57 @@ if(buttonIcon){
 }
 
 // End Toolip
+
+// Typing
+const inputChat = document.querySelector(".chat .inner-form input[name='content']");
+
+var timeOut;
+if(inputChat){
+  inputChat.addEventListener("keydown", () => {
+    socket.emit("CLIENT_SEND_TYPING", true)
+
+    clearTimeout(timeOut)
+
+    timeOut = setTimeout(() => {
+      socket.emit("CLIENT_SEND_TYPING", false)
+    }, 3000)
+  })
+}
+
+const elementListTyping = document.querySelector(".inner-list-typing");
+if(elementListTyping){
+  
+  // SERVER_SEND_TYPING
+  socket.on("SERVER_SEND_TYPING", (data) => {
+    if(data.type){
+      // điều kiện này để check có tồn tại typing chưa, nếu chưa thì mới add vào
+      const existBoxTyping = elementListTyping.querySelector(`.box-typing[my-id="${data.userId}"]`)
+      if(!existBoxTyping){
+        const div = document.createElement("div")
+        div.classList.add("box-typing")
+        div.setAttribute("my-id", data.userId)
+        div.innerHTML = `
+          <div class="inner-name">${data.fullName}</div>
+          <div class="inner-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        `
+        elementListTyping.appendChild(div)
+        bodyChat.scrollTop = bodyChat.scrollHeight;
+      }
+    }
+    else{
+      const existBoxTyping = elementListTyping.querySelector(`.box-typing[my-id="${data.userId}"]`)
+      if(existBoxTyping){
+        elementListTyping.removeChild(existBoxTyping)
+      }
+    }
+  })
+  // End SERVER_SEND_TYPING
+}
+  
+// End Typing
 
 // End Socket.io

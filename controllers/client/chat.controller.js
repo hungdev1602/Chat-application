@@ -23,6 +23,15 @@ module.exports.index = async (req, res) => {
         content: data.message,
       })
     })
+
+    // Lắng nghe sự kiện khi người dùng đang typing
+    socket.on("CLIENT_SEND_TYPING", (type) => {
+      socket.broadcast.emit("SERVER_SEND_TYPING", {
+        userId: res.locals.user.id,
+        fullName: res.locals.user.fullName,
+        type: type
+      })
+    })
   });
 
   // Lấy ra tin nhắn mặc định từ database
