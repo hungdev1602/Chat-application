@@ -44,8 +44,13 @@ block main
                 name="content"
               )
               span(class="btn btn-light mx-1 button-icon")
-                <i class="fa-regular fa-face-smile"></i>
+                i(class="fa-regular fa-face-smile")
+              label(for="file-upload-with-preview-upload-images" class="btn btn-light mx-1 button-icon mb-0")
+                i(class="fa-regular fa-image")
               button
                 i.fa-solid.fa-paper-plane
           div(div class="tooltip" role="tooltip")
             emoji-picker
+
+          .inner-preview-images
+            div(class="custom-file-container" data-upload-id="upload-images")

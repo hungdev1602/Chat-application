@@ -12,6 +12,8 @@ module.exports.index = async (req, res) => {
         content: data.message
       }
 
+      // console.log(data.images)
+
       // lưu tin nhắn vào database
       const newChat = new Chat(dataChatForSave)
       await newChat.save();

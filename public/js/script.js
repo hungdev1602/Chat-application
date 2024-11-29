@@ -14,18 +14,30 @@ var socket = io();
 
 const formChat = document.querySelector(".inner-form");
 if(formChat){
+  const upload = new FileUploadWithPreview.FileUploadWithPreview('upload-images', {
+    multiple: true, // up nhiều ảnh
+    maxFileCount: 6 // tôi đa 6 ảnh
+  });
+
   formChat.addEventListener("submit", (event) => {
     event.preventDefault();
 
     // Lấy được tin nhắn từ form và gửi cho server tin nhắn đó thông qua socket
     const message = formChat.content.value
-    const data = {
-      message: message
+    // Lấy ảnh của người dùng
+    const images = upload.cachedFileArray || []
+    // phải có tin nhắn hoặc hình ảnh
+    if(message || images.length > 0){
+      const data = {
+        message: message,
+        images: images
+      }
+      socket.emit("CLIENT_SEND_MESSAGE", data)
+      formChat.content.value = ""
+      upload.resetPreviewPanel(); // clear all selected images
+      // gửi tin nhắn xong và xoá typing
+      socket.emit("CLIENT_SEND_TYPING", false)
     }
-    socket.emit("CLIENT_SEND_MESSAGE", data)
-    formChat.content.value = ""
-    // gửi tin nhắn xong và xoá typing
-    socket.emit("CLIENT_SEND_TYPING", false)
   });
 }
 
